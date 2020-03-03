@@ -92,13 +92,23 @@ class Function:
 
                 if p == 'new_scope' or len(last_statement.statements) == 0:
                     statement = Statement.random(last_statement.scope, whitelist=[AssignmentStatement, IfStatement, WhileStatement, ForStatement])
+
                     last_statement.add_statement(statement)
+
+                    '''
+                    if isinstance(last_statement, IfStatement):
+                        if (random_with_prob(True, 50, False, 50)):
+                            last_statement.add_else_statement( Statement.random(last_statement.scope, whitelist=[AssignmentStatement, IfStatement, WhileStatement, ForStatement]))
+                    '''
+
+                    if not isinstance(statement, AssignmentStatement):
+                        last_statement = statement
                 elif p == 'old_scope':
                     statement = Statement.random(func.scope, whitelist=[AssignmentStatement, IfStatement, WhileStatement, ForStatement])
                     func.add_statement(statement)
                     last_statement = statement
 
-
+        func.add_statement(ReturnStatement.random(func.scope, func.return_type))
         
         return func
 

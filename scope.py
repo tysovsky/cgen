@@ -49,10 +49,13 @@ class Scope:
         return funcs[randint(0, len(funcs) - 1)]
     
     #either statement, function of variable or constant
-    def get_random_value(self, of_type = None, blacklist = [], max_depth = 5, current_depth = 0):
+    def get_random_value(self, of_type = None, blacklist = [], max_depth = 5, current_depth = 0, no_consts = False):
         from statements import Statement
         
-        value_type = random_with_prob('constant', 35, 'variable', 35, 'statement', 30, 'function', 40)
+        if no_consts:
+            value_type = random_with_prob('variable', 35, 'statement', 30, 'function', 40)
+        else:
+            value_type = random_with_prob('constant', 35, 'variable', 35, 'statement', 30, 'function', 40)
         
         if value_type == 'constant':
             return Constant.get_random(of_type)
@@ -60,7 +63,12 @@ class Scope:
         elif value_type == 'variable':
             val = self.get_random_variable(of_type, blacklist=blacklist)
             if val == None:
-                value_type = random_with_prob('constant', 50, 'statement', 50)
+                p = ['statement', 50]
+
+                if not no_consts:
+                    p.extend(['constant', 50])
+
+                value_type = random_with_prob(p)
                 if value_type == 'constant':
                     return Constant.get_random(of_type)
                 elif value_type == 'statement':
@@ -73,7 +81,11 @@ class Scope:
             val = Statement.random(self, of_type, max_depth=max_depth, current_depth = current_depth + 1)
 
             if val == None:
-                value_type = random_with_prob('constant', 50, 'variable', 50)
+                p = ['variable', 50]
+
+                if not no_consts:
+                    p.extend(['constant', 50])
+                value_type = random_with_prob(p)
                 if value_type == 'constant':
                     return Constant.get_random(of_type)
                 elif value_type == 'variable':
@@ -87,7 +99,11 @@ class Scope:
             val = self.get_random_function(of_type)
 
             if val == None:
-                value_type = random_with_prob('constant', 50, 'variable', 50)
+                p = ['variable', 50]
+
+                if not no_consts:
+                    p.extend(['constant', 50])
+                value_type = random_with_prob(p)
                 if value_type == 'constant':
                     return Constant.get_random(of_type)
                 elif value_type == 'variable':

@@ -50,6 +50,11 @@ class Statement:
 
             if IfStatement in whitelist:
                 probs.extend(['if', 10])
+            
+            '''
+            if ReturnStatement in whitelist:
+                probs.extend(['return', 10])
+            '''
 
             p = random_with_prob(probs)
 
@@ -67,6 +72,8 @@ class Statement:
                 return WhileStatement.random(scope)
             if p == 'if':
                 return IfStatement.random(scope)
+            if p == 'return':
+                return ReturnStatement.random(scope, return_type)
 
      
 # <operator> <statement>
@@ -247,7 +254,7 @@ class ReturnStatement(Statement):
 
     @staticmethod
     def random(scope: Scope, of_type: DataType):
-        return ReturnStatement(scope.get_random_value(of_type))
+        return ReturnStatement(scope.get_random_value(of_type, no_consts = True))
    
 
 #if (<statement>; <statement>; <statement>)
