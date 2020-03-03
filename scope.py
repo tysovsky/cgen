@@ -22,17 +22,17 @@ class Scope:
             vars.extend([x for x in self.in_scope if isinstance(x, Variable) and x.datatype == of_type and x not in blacklist])
         return vars
 
-    def get_functions(self, return_type = None):
+    def get_functions(self, return_type = None, blacklist = []):
         from function import Function
         funcs = []
 
         if self.parent:
-            funcs.extend(self.parent.get_functions())
+            funcs.extend(self.parent.get_functions(return_type=return_type, blacklist=blacklist))
 
         if return_type == None:
-            funcs.extend([x for x in self.in_scope if isinstance(x, Function)])
+            funcs.extend([x.copy() for x in self.in_scope if isinstance(x, Function) and x not in blacklist])
         else:
-            funcs.extend([x for x in self.in_scope if isinstance(x, Function) and x.return_type == return_type])
+            funcs.extend([x.copy() for x in self.in_scope if isinstance(x, Function) and x.return_type == return_type and x not in blacklist])
         return funcs
 
     def get_random_variable(self, of_type = None, blacklist = []):
@@ -42,8 +42,8 @@ class Scope:
         
         return vars[randint(0, len(vars) - 1)]
 
-    def get_random_function(self, return_type = None):
-        funcs = self.get_functions(return_type)
+    def get_random_function(self, return_type = None, blacklist = []):
+        funcs = self.get_functions(return_type, blacklist=blacklist)
         if not funcs:
             return None
         return funcs[randint(0, len(funcs) - 1)]
@@ -96,7 +96,7 @@ class Scope:
                         return Constant.get_random(of_type)
             else:
                 for parameter in val.parameters:
-                    pass
+                    parameter.value = self.get_random_value(parameter.datatype, max_depth=max_depth, current_depth=current_depth+1, blacklist=[val])
             
             return val
 

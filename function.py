@@ -2,6 +2,7 @@ from random import randint
 from scope import *
 from statements import *
 from variable import Variable
+from copy import deepcopy
 
 class Function:
     def __init__(self, name: str, return_type: DataType, parameters, new = True, scope = Scope()):
@@ -47,12 +48,18 @@ class Function:
             return s
         else:
             s = '{}('.format(self.name)
-            for i in range(self.parameters):
-                s += self.parameters[i].value
+            for i in range(len(self.parameters)):
+                s += str(self.parameters[i].value)
                 if i != len(self.parameters)-1:
                     s += ', '
-            s += ');'
+            s += ')'
             return s
+
+    def get_return_type(self):
+        return self.return_type
+
+    def copy(self):
+        return Function(self.name, self.return_type, deepcopy(self.parameters, memo=None, _nil=[]), self.new, self.scope)
 
     @staticmethod
     def random(scope: Scope = None, min_num_statements = 5, max_num_statements = 15):
@@ -83,7 +90,7 @@ class Function:
 
                 p = random_with_prob(probs)
 
-                if p == 'new_scope':
+                if p == 'new_scope' or len(last_statement.statements) == 0:
                     statement = Statement.random(last_statement.scope, whitelist=[AssignmentStatement, IfStatement, WhileStatement, ForStatement])
                     last_statement.add_statement(statement)
                 elif p == 'old_scope':

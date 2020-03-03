@@ -8,13 +8,13 @@ import subprocess
 
 
 #clean the results folder
-process = subprocess.Popen("rm -rf /home/ttsky/Desktop/cgen/results".split())
+process = subprocess.Popen("rm -rf results".split())
 process.communicate()
-process = subprocess.Popen("mkdir /home/ttsky/Desktop/cgen/results".split())
+process = subprocess.Popen("mkdir results".split())
 process.communicate()
-process = subprocess.Popen("mkdir /home/ttsky/Desktop/cgen/results/c".split())
+process = subprocess.Popen("mkdir results/c".split())
 process.communicate()
-process = subprocess.Popen("mkdir /home/ttsky/Desktop/cgen/results/assembly".split())
+process = subprocess.Popen("mkdir results/assembly".split())
 process.communicate()
 
 errors = 0
@@ -23,14 +23,14 @@ warnings = 0
 def setup_funcs():
     scope = Scope()
 
-    scope.add_to_scope(Function('floor', DataType.INT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('round', DataType.INT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('ceil', DataType.INT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('sin', DataType.FLOAT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('cos', DataType.FLOAT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('sin', DataType.FLOAT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('sqrt', DataType.FLOAT, [DataType.FLOAT], False))
-    scope.add_to_scope(Function('pow', DataType.FLOAT, [DataType.FLOAT, DataType.FLOAT], False))
+    scope.add_to_scope(Function('floor', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('round', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('ceil', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('sin', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('cos', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('sin', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('sqrt', DataType.FLOAT, [Variable('x', DataType.FLOAT)], False))
+    scope.add_to_scope(Function('pow', DataType.FLOAT, [Variable('x', DataType.FLOAT), Variable('y', DataType.FLOAT)], False))
 
     scope.get_functions()
 
